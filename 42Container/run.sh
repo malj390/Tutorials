@@ -7,12 +7,12 @@
 # This script builds and runs the 42-like Docker container.
 #
 # Features:
-# - Builds the Docker image if it doesn't exist.
+# - Builds the Docker image if it doesn't exist. [cite: 26]
 # - Mounts the current working directory to `/app` in the container.
 # - Passes the current user's ID and group ID to the container to avoid
 #   file permission issues.
 # - Removes the container after exiting.
-# - Supports bash and fish shell history persistence.
+# - Supports bash and fish shell history persistence. [cite: 97]
 #
 
 # --- Configuration ---
@@ -21,7 +21,7 @@ DOCKERFILE="Dockerfile"
 
 # --- Build the Docker image ---
 if ! docker image inspect "$IMAGE_NAME" &> /dev/null; then
-    echo "Building Docker image '$IMAGE_NAME' ભા"
+    echo "Building Docker image '$IMAGE_NAME' 🏗️"
     docker build -t "$IMAGE_NAME" \
         --build-arg USER_ID=$(id -u) \
         --build-arg GROUP_ID=$(id -g) \
@@ -47,7 +47,6 @@ if [ -f "git_config.env" ]; then
 fi
 
 # --- Mount SSH directory (Read/Write for persistence) ---
-# Creates ~/.ssh on host if missing, and mounts it RW so keys generated inside are saved.
 SSH_ARGS=()
 if [ ! -d "$HOME/.ssh" ]; then
     mkdir -p -m 700 "$HOME/.ssh"
@@ -55,11 +54,12 @@ fi
 SSH_ARGS+=("-v" "$HOME/.ssh:/home/42user/.ssh")
 
 # --- Run the Docker container ---
-echo "Running Docker container ભા"
+echo "Running Docker container 🚀"
 docker run -it --rm --hostname 42container \
     "${GIT_ARGS[@]}" \
     "${SSH_ARGS[@]}" \
     -v "$(pwd)":/app \
+    -v "/bin/bash:/host/bin/bash:ro" \
     -v "$HOME/.bash_history:/home/42user/.bash_history" \
     -v "$HOME/.zsh_history:/home/42user/.zsh_history" \
     -v "$HOME/.local/share/fish/fish_history:/home/42user/.local/share/fish/fish_history" \
@@ -72,4 +72,4 @@ docker run -it --rm --hostname 42container \
     -v $SSH_AUTH_SOCK:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent \
     -e HISTFILE=/home/42user/.bash_history \
     "$IMAGE_NAME" \
-    "$@"
+    /bin/bash -c "touch ~/.hushlogin && exec fish" "$@"
