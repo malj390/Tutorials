@@ -23,6 +23,7 @@ RUN apt update && apt install -y \
     lldb-12 \
     zsh \
     fish \
+    expect \
     git \
     curl \
     wget \
