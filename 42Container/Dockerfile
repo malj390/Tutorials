@@ -17,6 +17,7 @@ RUN apt update && apt install -y \
     build-essential \
     clang-12 \
     gcc-10 g++-10 \
+    cmake \
     make \
     valgrind \
     gdb \
@@ -39,6 +40,10 @@ RUN apt update && apt install -y \
     libbsd-dev \
     libx11-dev \
     libxext-dev \
+    libglfw3-dev \
+    libgl1-mesa-dev \
+    xorg-dev \
+    zlib1g-dev \
     && apt clean && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------
