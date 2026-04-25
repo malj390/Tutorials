@@ -36,6 +36,8 @@ RUN apt update && apt install -y \
     nodejs npm \
     sudo \
     fzf \
+    asciinema \
+    locales \
     libreadline-dev \
     libbsd-dev \
     libx11-dev \
@@ -45,6 +47,14 @@ RUN apt update && apt install -y \
     xorg-dev \
     zlib1g-dev \
     && apt clean && rm -rf /var/lib/apt/lists/*
+
+# ---------------------------
+# Configure Locales
+# ---------------------------
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # ---------------------------
 # Set default compilers
@@ -93,6 +103,7 @@ RUN mkdir -p /home/42user/.config/fish && \
 
 USER 42user
 ENV HOME /home/42user
+ENV SHELL /usr/bin/fish
 WORKDIR /home/42user/project
 
 # ---------------------------
@@ -123,6 +134,7 @@ RUN echo "==== Installed tool versions ====" && \
     echo "bash: $(bash --version | head -n 1)" && \
     echo "zsh: $(zsh --version)" && \
     echo "fish: $(fish --version)" && \
+    echo "asciinema: $(asciinema --version)" && \
     echo "gdb: $(gdb --version | head -n 1)" && \
     echo "lldb: $(lldb-12 --version | head -n 1)" && \
     echo "ruby: $(ruby --version)" && \
