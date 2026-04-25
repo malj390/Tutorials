@@ -180,3 +180,7 @@ If you modify the `Dockerfile` or suspect the Docker image is corrupted, you may
    ```bash
    42
    ```
+
+### Installing New Programs or Upgrading
+
+To add new tools to your environment or upgrade existing ones, you should modify the `Dockerfile` and rebuild the image. For detailed instructions on how to do this (both temporarily and permanently), see the **[Docker Tutorial](Docker_tutorial.md#9-upgrading--installing-new-programs)**.

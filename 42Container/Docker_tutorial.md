@@ -202,4 +202,59 @@ source ~/.bashrc  # or ~/.zshrc
 
 ---
 
+## 9. Upgrading & Installing New Programs
+
+In Docker, you don't "upgrade" a container like you would a virtual machine or a physical computer. Instead, you update the **Image** and start a new container from it.
+
+### A. The "Testing" Way (Temporary)
+If you just want to try a program without rebuilding the whole image, you can install it while the container is running.
+
+1.  Inside your container terminal:
+    ```bash
+    sudo apt update
+    sudo apt install <program_name>
+    ```
+    *Note: In this specific setup, you use `sudo` because you are a non-root user.*
+
+**⚠️ Warning:** If you exit the container (and it was started with `--rm`, which the `42` command does), **the program will be gone** the next time you start it.
+
+### B. The "Proper" Way (Permanent)
+To make a program part of your environment permanently, you must modify the `Dockerfile`.
+
+1.  Open the `Dockerfile` in your editor.
+2.  Find the `RUN apt update && apt install -y` section.
+3.  Add your new program to the list (alphabetical order is a good practice).
+    ```dockerfile
+    RUN apt update && apt install -y \
+        build-essential \
+        # ... existing programs ...
+        my-new-program \
+        && apt clean && rm -rf /var/lib/apt/lists/*
+    ```
+4.  **Rebuild and Run**:
+    If you use the `42` alias or `./run.sh`, it will detect the changes and rebuild automatically:
+    ```bash
+    42
+    ```
+    Or manually:
+    ```bash
+    docker build -t 42container .
+    ```
+
+### C. Why rebuild instead of just installing?
+1.  **Consistency**: Anyone else using this repo will get the same tools.
+2.  **Cleanliness**: Docker images are built in layers. Rebuilding ensures everything is correctly integrated and cleaned up.
+3.  **Automation**: You don't have to remember what you installed manually.
+
+### D. Upgrading existing programs
+If you want to update all packages to their latest versions:
+1.  In the `Dockerfile`, usually `apt update` handles fetching the latest lists.
+2.  To force a fresh download, you can use:
+    ```bash
+    docker build --no-cache -t 42container .
+    ```
+    This ignores the saved layers and downloads everything from scratch.
+
+---
+
 *This tutorial was created to help you navigate the 42Container environment and master the basics of Docker.*
