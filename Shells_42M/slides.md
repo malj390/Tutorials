@@ -215,7 +215,8 @@ Reglas más flexibles:
 
 - `set` reemplaza al `=` — sin errores de espacios
 - `test` sin corchetes, cierra con `end`
-- Variables globales con `set -gx`, locales con `set -l`
+- Variables globales con `set -gx`
+- Variables locales con `set -l`
 
 ---
 layout: two-cols-title
