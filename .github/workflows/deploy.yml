@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'Shells_42M/**'
+      - '.github/workflows/**'
 
 permissions:
   contents: read
