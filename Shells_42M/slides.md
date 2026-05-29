@@ -278,6 +278,10 @@ ejemplo_args() {
 ::right::
 # <span class="text-blue-400">Fish</span>
 ```fish
+# Brace expansion (desde Fish 3.0)
+mkdir test{1..4}
+mkdir -p proyecto/{js,css}/{src,dist}
+
 # Parseo de argumentos en una línea
 function ejemplo_args
     argparse 'o/output=' 'e/ext=+' -- $argv
@@ -285,9 +289,6 @@ function ejemplo_args
     echo "Extensiones: $_flag_ext"
 end
 
-# Brace expansion (desde Fish 3.0)
-mkdir test{1..4}
-mkdir -p proyecto/{js,css}/{src,dist}
 ```
 
 
