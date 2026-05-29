@@ -31,8 +31,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -47,7 +45,7 @@ jobs:
           cache-dependency-path: Shells_42M/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Build slides
         run: pnpm slidev build --base /${{ github.event.repository.name }}/
@@ -58,7 +56,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Corregido: Se apunta a la ruta real desde la raíz del repositorio
           path: Shells_42M/dist
 
       - name: Deploy to GitHub Pages
