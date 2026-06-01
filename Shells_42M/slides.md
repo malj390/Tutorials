@@ -766,12 +766,12 @@ $>find . -name ".git" -type d
 # statussearch: Salida de ejemplo
 
 <pre class="bg-[#1e1e1e] p-4 rounded-md text-sm font-mono mt-4 border border-gray-700 w-full relative">
-<span class="text-gray-400">✔ ./000_42Repos/Current/Minishell-dev</span>
+<span class="text-gray-400">✔ ./path/to/repo1-dev</span>
 
-<span class="text-[#f5f543] font-bold">🚧 ./000_42Repos/Current/42Malaga (Cambios locales)</span>
- <span class="text-red-400">M</span> Presentacion_Bash_Fish/Shells_42M/slides.md
+<span class="text-[#f5f543] font-bold">🚧 ./path/to/repo2 (Cambios locales)</span>
+ <span class="text-red-400">M</span> project/src/test.c
 
-<span class="text-pink-400 font-bold">📥 ./repo_inventado/README_tutorial (Pendiente de PULL)</span>
+<span class="text-pink-400 font-bold">📥 ./path/to/repo3/README_tutorial (Pendiente de PULL)</span>
 </pre>
 
 ---
