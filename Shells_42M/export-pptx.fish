@@ -10,6 +10,8 @@
 #   ./export-pptx.fish visible            # PNG + texto OCR visible blanco
 #   ./export-pptx.fish structured         # PPTX estructurado + PNG fondo (default)
 #   ./export-pptx.fish no-bg              # PPTX estructurado sin PNG
+#   ./export-pptx.fish marp              # marp-slides.md → PPTX editable
+#   ./export-pptx.fish marp-image        # marp-slides.md → PPTX imagen
 #   ./export-pptx.fish help               # esta ayuda
 # ──────────────────────────────────────────────
 
@@ -35,16 +37,24 @@ switch $mode
         echo "  structured  (alias: with-bg, default) PPTX con estructura editable + PNG fondo"
         echo "  no-bg       Solo estructura editable, sin PNG fondo"
         echo ""
+        echo "Modos Marp (desde marp-slides.md):"
+        echo "  marp        PPTX editable (experimental, requiere LibreOffice)"
+        echo "  marp-image  PPTX como imagen (todas las diapositivas renderizadas)"
+        echo ""
         echo "Ejemplos:"
         echo "  ./export-pptx.fish"
         echo "  ./export-pptx.fish invisible"
         echo "  ./export-pptx.fish visible"
         echo "  ./export-pptx.fish structured"
         echo "  ./export-pptx.fish no-bg"
+        echo "  ./export-pptx.fish marp"
+        echo "  ./export-pptx.fish marp-image"
         exit 0
     case image-only default
         set mode image-only
     case invisible visible structured with-bg no-bg
+        # válido
+    case marp marp-image
         # válido
     case '*'
         echo "✗ Modo desconocido: '$mode'"
@@ -52,8 +62,10 @@ switch $mode
         exit 1
 end
 
-# ── Paso 1: Exportar PNGs (excepto no-bg que no los necesita) ──
-if test "$mode" != no-bg
+set CHROME_PATH "$HOME/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome"
+
+# ── Paso 1 (Slidev): Exportar PNGs ──
+if test "$mode" != no-bg; and test "$mode" != marp; and test "$mode" != marp-image
     echo "── Paso 1: Exportar slides como PNG (modo oscuro) ──"
     pnpm exec slidev export --format png --dark
 
@@ -87,6 +99,14 @@ switch $mode
     case no-bg
         uv run --with python-pptx python3 pptx/slides2pptx.py no-bg
         set outfile slides_structured.pptx
+
+    case marp
+        pnpm exec marp --pptx-editable marp-slides.md -o slides_marp.pptx --browser-path "$CHROME_PATH"
+        set outfile slides_marp.pptx
+
+    case marp-image
+        pnpm exec marp --pptx marp-slides.md -o slides_marp_image.pptx --browser-path "$CHROME_PATH"
+        set outfile slides_marp_image.pptx
 end
 
 if test $status -ne 0

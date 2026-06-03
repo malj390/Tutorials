@@ -9,12 +9,17 @@
 #   make build  →  Web estática
 #   make sync   →  Traer última versión del slides.md raíz
 #   make clean  →  Limpiar exportaciones
+#   make pptx-marp            → marp-slides.md → PPTX editable
+#   make pptx-marp-image      → marp-slides.md → PPTX imagen
 # ──────────────────────────────────────────────
 
 SLIDES ?= slides.md
 ENTRY  ?= $(SLIDES)
+MARP_SLIDES ?= marp-slides.md
+MARP_PPTX  ?= slides_marp.pptx
+CHROME_PATH ?= $(HOME)/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome
 
-.PHONY: help dev pdf png build sync clean dev-alt pdf-alt
+.PHONY: help dev pdf png build sync clean dev-alt pdf-alt pptx-marp pptx-marp-image
 
 help:
 	@echo "╔══════════════════════════════════════╗"
@@ -29,11 +34,14 @@ help:
 	@echo "  make build    → Web estática de slides.md"
 	@echo "  make sync     → Copiar slides.md desde raíz"
 	@echo "  make clean    → Limpiar exportaciones"
+	@echo "  make pptx-marp       → marp-slides.md → PPTX (editable)"
+	@echo "  make pptx-marp-image → marp-slides.md → PPTX (imagen)"
 	@echo ""
 	@echo "Ejemplos:"
-	@echo "  make dev              # slides.md original"
-	@echo "  make dev-alt          # slide.md (nuevo)"
-	@echo "  make pdf ENTRY=slide.md  # exportar slide.md"
+	@echo "  make dev                  # slides.md original"
+	@echo "  make dev-alt              # slide.md (nuevo)"
+	@echo "  make pdf ENTRY=slide.md   # exportar slide.md"
+	@echo "  make pptx-marp            # marp-slides.md a PPTX"
 	@echo ""
 
 dev:
@@ -64,6 +72,18 @@ sync:
 	# Copia slides.md desde la raíz
 	cp ../slides.md slides.md
 	@echo "✔ Sincronizado desde ../slides.md"
+
+pptx-marp:
+	# Exporta marp-slides.md a PPTX editable (experimental)
+	pnpm exec marp --pptx-editable $(MARP_SLIDES) -o slides_marp.pptx \
+		--browser-path "$(CHROME_PATH)"
+	@echo "✔ PPTX editable creado: slides_marp.pptx"
+
+pptx-marp-image:
+	# Exporta marp-slides.md a PPTX como imagen
+	pnpm exec marp --pptx $(MARP_SLIDES) -o slides_marp_image.pptx \
+		--browser-path "$(CHROME_PATH)"
+	@echo "✔ PPTX imagen creado: slides_marp_image.pptx"
 
 clean:
 	# Elimina exportaciones previas
